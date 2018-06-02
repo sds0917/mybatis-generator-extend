@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+
+	<context id="MyBatis3Simple" targetRuntime="org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3SimpleImplExtend" defaultModelType="flat">
+
+		<plugin type="org.mybatis.generator.plugins.LombokPlugin" />
+		<plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin" />
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin">
+			<property name="suppressJavaInterface" value="false" />
+		</plugin>
+		<!--
+		<plugin type="org.mybatis.generator.plugins.CommentsPlugin">
+			<property name="author" value="孙东升" />
+			<property name="dateFormatPattern" value="yyyy-MM-dd HH:mm:ss" />
+		</plugin>
+		-->
+
+		<commentGenerator type="org.mybatis.generator.internal.CommentGenerator">
+			<property name="addFieldComment" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false" userId="root" password="root">
+			<property name="useInformationSchema" value="true" />
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="orm.springframework.demo.domain.basic" targetProject="src/main/java">
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="mapper/basic" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator type="XMLMAPPER" targetPackage="orm.springframework.demo.mapper.basic" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="servicePackage" value="orm.springframework.demo.service" />
+		</javaClientGenerator>
+
+		<table domainObjectName="Test" tableName="test">
+			<columnOverride column="id" javaType="Integer" />
+			<columnOverride column="name" javaType="String" />
+		</table>
+
+		<table domainObjectName="TestCopy" tableName="test_copy">
+			<columnOverride column="id" javaType="Integer" />
+			<columnOverride column="name" javaType="String" />
+		</table>
+
+	</context>
+
+</generatorConfiguration>

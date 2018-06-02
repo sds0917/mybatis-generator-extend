@@ -29,4 +29,16 @@ public abstract class ObjectUtils {
 		return false;
 	}
 
+	public static String toLowerFristChar(String string) {
+		char[] arr = string.toCharArray();
+		arr[0] += 32;
+		return String.valueOf(arr);
+	}
+
+	public static String toUpperFristChar(String string) {
+		char[] arr = string.toCharArray();
+		arr[0] -= 32;
+		return String.valueOf(arr);
+	}
+
 }
