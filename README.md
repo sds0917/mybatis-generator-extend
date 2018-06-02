@@ -7,5 +7,4 @@
 > * service接口实现类生成
 > * 后续开发中...
 
-----
 ## 具体配置文件请参照/src/main/resources/generator.xml文件
