@@ -14,56 +14,64 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.ServiceImplTopLevelClass;
+import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3SimpleImplExtend;
 import org.mybatis.generator.codegen.mybatis3.javamapper.SimpleJavaClientGenerator;
 import org.mybatis.generator.internal.util.StringUtility;
 
-public class SimpleJavaServiceImplGenerator extends SimpleJavaClientGenerator {
+@SuppressWarnings("unused")
+public class SimpleJavaControllerGenerator extends SimpleJavaClientGenerator {
 
-    private FullyQualifiedJavaType superInterface;
-    private String mapperName = "mapper";
+    private String mapperName = "service";
     private boolean service;
+    private FullyQualifiedJavaType superInterface;
+    private IntrospectedTableMyBatis3SimpleImplExtend batis3SimpleImpl;
 
-    public SimpleJavaServiceImplGenerator(String superInterface) {
+    public SimpleJavaControllerGenerator() {
+        super(false);
+    }
+
+    public SimpleJavaControllerGenerator(String superInterface) {
         this(new FullyQualifiedJavaType(superInterface));
     }
 
-    public SimpleJavaServiceImplGenerator(FullyQualifiedJavaType superInterface) {
+    public SimpleJavaControllerGenerator(FullyQualifiedJavaType superInterface) {
         super(false);
         this.superInterface = superInterface;
     }
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
-        IntrospectedTableMyBatis3SimpleImplExtend batis3SimpleImpl = (IntrospectedTableMyBatis3SimpleImplExtend) introspectedTable;
+        batis3SimpleImpl = (IntrospectedTableMyBatis3SimpleImplExtend) introspectedTable;
         this.service = StringUtility.isTrue(context.getJavaClientGeneratorConfiguration().getProperties().getProperty("service", "true"));
-        progressCallback.startTask(MessageFormat.format("Generating Service Impl Class for table {0}", batis3SimpleImpl.getFullyQualifiedTable()));
-        ServiceImplTopLevelClass topLevelClass = new ServiceImplTopLevelClass(batis3SimpleImpl.getMyBatis3JavaServiceImplType());
+        progressCallback.startTask(MessageFormat.format("Generating Controller Class for table {0}", batis3SimpleImpl.getFullyQualifiedTable()));
+        TopLevelClass topLevelClass = new TopLevelClass(batis3SimpleImpl.getMyBatis3JavaControllerType());
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        context.getCommentGenerator().addJavaFileComment(topLevelClass);
-        if (null != this.superInterface && this.service) {
+        // context.getCommentGenerator().addJavaFileComment(topLevelClass);
+        if (null != this.superInterface) {
             topLevelClass.addImportedType(superInterface);
             topLevelClass.addSuperInterface(new FullyQualifiedJavaType(superInterface.getShortName()));
         }
 
         addAnnotations(topLevelClass);
         addMapperField(topLevelClass);
-        addDeleteByPrimaryKeyMethod(topLevelClass);
-        addInsertMethod(topLevelClass);
-        addSelectByPrimaryKeyMethod(topLevelClass);
-        addSelectAllMethod(topLevelClass);
-        addUpdateByPrimaryKeyMethod(topLevelClass);
+        // addDeleteByPrimaryKeyMethod(topLevelClass);
+        // addInsertMethod(topLevelClass);
+        // addSelectByPrimaryKeyMethod(topLevelClass);
+        // addSelectAllMethod(topLevelClass);
+        // addUpdateByPrimaryKeyMethod(topLevelClass);
 
         List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
         answer.add(topLevelClass);
         return answer;
     }
 
-    private void addAnnotations(ServiceImplTopLevelClass topLevelClass) {
-        topLevelClass.addImportedType("org.springframework.transaction.annotation.Transactional");
-        topLevelClass.addImportedType("org.springframework.stereotype.Service");
-        topLevelClass.addAnnotation("@Service");
-        topLevelClass.addAnnotation("@Transactional");
+    private void addAnnotations(TopLevelClass topLevelClass) {
+        topLevelClass.addImportedType("org.springframework.web.bind.annotation.ResponseStatus");
+        topLevelClass.addImportedType("org.springframework.http.HttpStatus");
+        topLevelClass.addImportedType("org.springframework.web.bind.annotation.RestController");
+        topLevelClass.addAnnotation("@RestController");
+        topLevelClass.addAnnotation("@ResponseStatus(HttpStatus.OK)");
     }
 
     private void addUpdateByPrimaryKeyMethod(ServiceImplTopLevelClass topLevelClass) {
@@ -76,7 +84,7 @@ public class SimpleJavaServiceImplGenerator extends SimpleJavaClientGenerator {
         method.setName(introspectedTable.getUpdateByPrimaryKeyStatementId());
         method.addParameter(new Parameter(parameterType, "record"));
         method.addBodyLine(new StringBuffer("return ").append(mapperName).append(".").append(method.getName()).append("(record);").toString());
-        if (null != this.superInterface && this.service) {
+        if (null != this.superInterface) {
             method.addAnnotation("@Override");
         }
         topLevelClass.addImportedTypes(importedTypes);
@@ -95,10 +103,9 @@ public class SimpleJavaServiceImplGenerator extends SimpleJavaClientGenerator {
         method.setReturnType(returnType);
         method.setName(introspectedTable.getSelectAllStatementId());
         method.addBodyLine(new StringBuffer("return ").append(mapperName).append(".").append(method.getName()).append("();").toString());
-        if (null != this.superInterface && this.service) {
+        if (null != this.superInterface) {
             method.addAnnotation("@Override");
         }
-        method.addAnnotation("@Transactional(readOnly = true)");
         topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }
@@ -113,7 +120,7 @@ public class SimpleJavaServiceImplGenerator extends SimpleJavaClientGenerator {
         importedTypes.add(parameterType);
         method.addParameter(new Parameter(parameterType, "record"));
         method.addBodyLine(new StringBuffer("return ").append(mapperName).append(".").append(method.getName()).append("(record);").toString());
-        if (null != this.superInterface && this.service) {
+        if (null != this.superInterface) {
             method.addAnnotation("@Override");
         }
         topLevelClass.addImportedTypes(importedTypes);
@@ -136,7 +143,7 @@ public class SimpleJavaServiceImplGenerator extends SimpleJavaClientGenerator {
             sb.append(parameter.getName());
         }
         method.addBodyLine(sb.append(");").toString());
-        if (null != this.superInterface && this.service) {
+        if (null != this.superInterface) {
             method.addAnnotation("@Override");
         }
         topLevelClass.addImportedTypes(importedTypes);
@@ -164,16 +171,18 @@ public class SimpleJavaServiceImplGenerator extends SimpleJavaClientGenerator {
             sb.append(parameter.getName());
         }
         method.addBodyLine(sb.append(");").toString());
-        if (null != this.superInterface && this.service) {
+        if (null != this.superInterface) {
             method.addAnnotation("@Override");
         }
-        method.addAnnotation("@Transactional(readOnly = true)");
         topLevelClass.addImportedTypes(importedTypes);
         topLevelClass.addMethod(method);
     }
 
-    private void addMapperField(ServiceImplTopLevelClass topLevelClass) {
-        FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
+    private void addMapperField(TopLevelClass topLevelClass) {
+        FullyQualifiedJavaType type = new FullyQualifiedJavaType(batis3SimpleImpl.getMyBatis3JavaServiceType());
+        if (!this.service) {
+            type = new FullyQualifiedJavaType(batis3SimpleImpl.getMyBatis3JavaServiceImplType());
+        }
         Field field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(new FullyQualifiedJavaType(type.getShortName()));

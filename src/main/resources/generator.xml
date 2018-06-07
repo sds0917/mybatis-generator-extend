@@ -1,22 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
-
 	<context id="MyBatis3Simple" targetRuntime="org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3SimpleImplExtend" defaultModelType="flat">
-
 		<plugin type="org.mybatis.generator.plugins.LombokPlugin" />
 		<plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin" />
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin">
 			<property name="suppressJavaInterface" value="false" />
 		</plugin>
-		<!--
-		<plugin type="org.mybatis.generator.plugins.CommentsPlugin">
-			<property name="author" value="孙东升" />
-			<property name="dateFormatPattern" value="yyyy-MM-dd HH:mm:ss" />
-		</plugin>
-		-->
 
 		<commentGenerator type="org.mybatis.generator.internal.CommentGenerator">
+			<property name="author" value="孙东升" />
 			<property name="addFieldComment" value="true" />
 		</commentGenerator>
 
@@ -28,7 +21,7 @@
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
-		<javaModelGenerator targetPackage="orm.springframework.demo.domain.basic" targetProject="src/main/java">
+		<javaModelGenerator targetPackage="org.springframework.microservice.demo.domain.basic" targetProject="src/main/java">
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
@@ -36,21 +29,13 @@
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-		<javaClientGenerator type="XMLMAPPER" targetPackage="orm.springframework.demo.mapper.basic" targetProject="src/main/java">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="org.springframework.microservice.demo.mapper.basic" targetProject="src/main/java">
 			<property name="enableSubPackages" value="true" />
-			<property name="servicePackage" value="orm.springframework.demo.service" />
+			<property name="service" value="false" />
+			<property name="servicePackage" value="org.springframework.microservice.demo.service" />
+			<property name="controllerPackage" value="org.springframework.microservice.demo.web" />
 		</javaClientGenerator>
 
-		<table domainObjectName="Test" tableName="test">
-			<columnOverride column="id" javaType="Integer" />
-			<columnOverride column="name" javaType="String" />
-		</table>
-
-		<table domainObjectName="TestCopy" tableName="test_copy">
-			<columnOverride column="id" javaType="Integer" />
-			<columnOverride column="name" javaType="String" />
-		</table>
-
+		<table domainObjectName="User" tableName="user"></table>
 	</context>
-
 </generatorConfiguration>

@@ -7,58 +7,79 @@ import org.mybatis.generator.internal.util.StringUtility;
 
 public class IntrospectedTableMyBatis3SimpleImplExtend extends IntrospectedTableMyBatis3SimpleImpl {
 
-	private static final String ATTR_MYBATIS3_JAVA_SERVICE_TYPE = "ATTR_MYBATIS3_JAVA_SERVICE_TYPE", ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE = "ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE", DEFAULT_SERVICE_PACKAGE = "org.mybatis.generator.service";
-	private String servicePackage;
+    private static final String ATTR_MYBATIS3_JAVA_SERVICE_TYPE = "ATTR_MYBATIS3_JAVA_SERVICE_TYPE", ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE = "ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE", ATTR_MYBATIS3_JAVA_CONTROLLER_TYPE = "ATTR_MYBATIS3_JAVA_CONTROLLER_TYPE", DEFAULT_SERVICE_PACKAGE = "org.mybatis.generator.service",
+            DEFAULT_CONTROLLER_PACKAGE = "org.mybatis.generator.web";
+    private String servicePackage, controllerPackage;
 
-	@Override
-	public void calculateGenerators(List<String> warnings, ProgressCallback progressCallback) {
-		super.calculateGenerators(warnings, progressCallback);
-		this.servicePackage = context.getJavaClientGeneratorConfiguration().getProperties().getProperty("servicePackage", DEFAULT_SERVICE_PACKAGE);
-		if (!StringUtility.stringHasValue(servicePackage)) {
-			return;
-		}
-		SimpleJavaServiceGenerator serviceGenerator = new SimpleJavaServiceGenerator();
-		initializeAbstractGenerator(serviceGenerator, warnings, progressCallback);
-		setMyBatis3JavaServiceType();
-		setMyBatis3JavaServiceImplType();
-		clientGenerators.add(serviceGenerator);
-	}
+    @Override
+    public void calculateGenerators(List<String> warnings, ProgressCallback progressCallback) {
+        super.calculateGenerators(warnings, progressCallback);
+        this.servicePackage = context.getJavaClientGeneratorConfiguration().getProperties().getProperty("servicePackage", DEFAULT_SERVICE_PACKAGE);
+        this.controllerPackage = context.getJavaClientGeneratorConfiguration().getProperties().getProperty("controllerPackage", DEFAULT_CONTROLLER_PACKAGE);
+        if (!StringUtility.stringHasValue(servicePackage)) {
+            return;
+        }
+        SimpleJavaServiceGenerator serviceGenerator = new SimpleJavaServiceGenerator();
+        initializeAbstractGenerator(serviceGenerator, warnings, progressCallback);
+        setMyBatis3JavaServiceType();
+        setMyBatis3JavaServiceImplType();
+        setMyBatis3JavaControllerType();
+        clientGenerators.add(serviceGenerator);
+    }
 
-	public String getMyBatis3JavaServiceImplType() {
-		return (String) getAttribute(ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE);
-	}
+    public String getMyBatis3JavaControllerType() {
+        return (String) getAttribute(ATTR_MYBATIS3_JAVA_CONTROLLER_TYPE);
+    }
 
-	private void setMyBatis3JavaServiceImplType() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(servicePackage).append('.').append("impl").append(".");
-		if (StringUtility.stringHasValue(tableConfiguration.getMapperName())) {
-			sb.append(tableConfiguration.getMapperName());
-		} else {
-			if (StringUtility.stringHasValue(fullyQualifiedTable.getDomainObjectSubPackage())) {
-				sb.append(fullyQualifiedTable.getDomainObjectSubPackage()).append('.');
-			}
-			sb.append(fullyQualifiedTable.getDomainObjectName());
-		}
-		setAttribute(ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE, sb.append("ServiceImpl").toString());
-	}
+    private void setMyBatis3JavaControllerType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(controllerPackage).append('.');
+        if (StringUtility.stringHasValue(tableConfiguration.getMapperName())) {
+            sb.append(tableConfiguration.getMapperName());
+        } else {
+            if (StringUtility.stringHasValue(fullyQualifiedTable.getDomainObjectSubPackage())) {
+                sb.append(fullyQualifiedTable.getDomainObjectSubPackage()).append('.');
+            }
+            sb.append(fullyQualifiedTable.getDomainObjectName());
+        }
+        setAttribute(ATTR_MYBATIS3_JAVA_CONTROLLER_TYPE, sb.append("Controller").toString());
+    }
 
-	public String getMyBatis3JavaServiceType() {
-		return (String) getAttribute(ATTR_MYBATIS3_JAVA_SERVICE_TYPE);
-	}
+    public String getMyBatis3JavaServiceImplType() {
+        return (String) getAttribute(ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE);
+    }
 
-	private void setMyBatis3JavaServiceType() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(servicePackage).append('.');
-		if (StringUtility.stringHasValue(tableConfiguration.getMapperName())) {
-			sb.append("I").append(tableConfiguration.getMapperName());
-		} else {
-			if (StringUtility.stringHasValue(fullyQualifiedTable.getDomainObjectSubPackage())) {
-				sb.append(fullyQualifiedTable.getDomainObjectSubPackage()).append('.');
-			}
-			sb.append("I").append(fullyQualifiedTable.getDomainObjectName());
-		}
-		setAttribute(ATTR_MYBATIS3_JAVA_SERVICE_TYPE, sb.append("Service").toString());
+    private void setMyBatis3JavaServiceImplType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(servicePackage).append('.').append("impl").append(".");
+        if (StringUtility.stringHasValue(tableConfiguration.getMapperName())) {
+            sb.append(tableConfiguration.getMapperName());
+        } else {
+            if (StringUtility.stringHasValue(fullyQualifiedTable.getDomainObjectSubPackage())) {
+                sb.append(fullyQualifiedTable.getDomainObjectSubPackage()).append('.');
+            }
+            sb.append(fullyQualifiedTable.getDomainObjectName());
+        }
+        setAttribute(ATTR_MYBATIS3_JAVA_SERVICEIMPL_TYPE, sb.append("ServiceImpl").toString());
+    }
 
-	}
+    public String getMyBatis3JavaServiceType() {
+        return (String) getAttribute(ATTR_MYBATIS3_JAVA_SERVICE_TYPE);
+    }
+
+    private void setMyBatis3JavaServiceType() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(servicePackage).append('.');
+        if (StringUtility.stringHasValue(tableConfiguration.getMapperName())) {
+            sb.append("I").append(tableConfiguration.getMapperName());
+        } else {
+            if (StringUtility.stringHasValue(fullyQualifiedTable.getDomainObjectSubPackage())) {
+                sb.append(fullyQualifiedTable.getDomainObjectSubPackage()).append('.');
+            }
+            sb.append("I").append(fullyQualifiedTable.getDomainObjectName());
+        }
+        setAttribute(ATTR_MYBATIS3_JAVA_SERVICE_TYPE, sb.append("Service").toString());
+
+    }
 
 }
